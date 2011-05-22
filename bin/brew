@@ -1,9 +1,19 @@
 #!/usr/bin/ruby
 # -*- coding: utf-8 -*-
 
-HOMEBREW_BREW_FILE = ENV['HOMEBREW_BREW_FILE'] = File.expand_path(__FILE__)
-
 require 'pathname'
+
+# here's the original which just based it off of this file, this fails if this file is a symlink
+# uses location of sym link not the actual file.
+# HOMEBREW_BREW_FILE = ENV['HOMEBREW_BREW_FILE'] = File.expand_path(__FILE__)
+#
+# this handles the simlink case properly and uses the location of the real file:
+HOMEBREW_BREW_FILE = ENV['HOMEBREW_BREW_FILE'] = Pathname.new(__FILE__).realpath
+
+# test:
+# print "\n\n BREW file: "  + HOMEBREW_BREW_FILE + "\n\n"
+# print "\n\n ENV['HOMEBREW_BREW_FILE']  " + ENV['HOMEBREW_BREW_FILE'] + "\n\n" 
+
 HOMEBREW_LIBRARY_PATH = Pathname.new(__FILE__).realpath.dirname.parent.join("Library/Homebrew").to_s
 $:.unshift(HOMEBREW_LIBRARY_PATH)
 require 'global'
